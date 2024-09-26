@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="main" pattern="src[yggdrasil.main]:com.aniable.yggdrasil..*" />
+</component>
