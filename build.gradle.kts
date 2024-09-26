@@ -41,5 +41,6 @@ dependencies {
     implementation(libs.logback.classic)
     implementation(libs.bundles.exposed)
     implementation(libs.h2)
+    implementation(libs.bundles.koin)
     testImplementation(libs.kotlin.test.junit)
 }

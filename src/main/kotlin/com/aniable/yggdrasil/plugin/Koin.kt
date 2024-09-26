@@ -16,21 +16,14 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aniable.yggdrasil
+package com.aniable.yggdrasil.plugin
 
-import com.aniable.yggdrasil.plugin.*
 import io.ktor.server.application.*
+import org.koin.ktor.plugin.Koin
+import org.koin.logger.slf4jLogger
 
-fun main(args: Array<String>) {
-	io.ktor.server.netty.EngineMain.main(args)
-}
-
-fun Application.module() {
-	configureSecurity()
-	configureHTTP()
-	configureMonitoring()
-	configureSerialization()
-	configureKoin()
-	configureDatabases()
-	configureRouting()
+fun Application.configureKoin() {
+	install(Koin) {
+		slf4jLogger()
+	}
 }

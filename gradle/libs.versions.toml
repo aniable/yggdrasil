@@ -4,6 +4,7 @@ ktor = "3.0.0-rc-1"
 logback = "1.5.8"
 exposed = "0.55.0"
 h2 = "2.3.232"
+koin = "4.0.0"
 
 [libraries]
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
@@ -11,9 +12,13 @@ exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "e
 exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
 h2 = { module = "com.h2database:h2", version.ref = "h2" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-ktor = { module = "io.insert-koin:koin-ktor", version.ref = "koin" }
+koin-logger-slf4j = { module = "io.insert-koin:koin-logger-slf4j", version.ref = "koin" }
 
 [bundles]
 exposed = ["exposed-core", "exposed-jdbc"]
+koin = ["koin-core", "koin-ktor", "koin-logger-slf4j"]
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
