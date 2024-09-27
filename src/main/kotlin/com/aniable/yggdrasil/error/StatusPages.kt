@@ -28,7 +28,7 @@ private fun buildErrorResponse(call: ApplicationCall, status: HttpStatusCode, ca
 	return ErrorResponse(
 		statusCode = status.value,
 		statusReason = status.description,
-		message = cause?.message,
+		message = cause?.message ?: cause?.stackTraceToString(),
 		path = call.parameters["path"],
 		timestamp = Clock.System.now()
 	)
