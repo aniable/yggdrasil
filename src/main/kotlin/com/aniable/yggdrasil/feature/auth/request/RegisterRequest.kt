@@ -16,25 +16,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aniable.yggdrasil.plugin
+package com.aniable.yggdrasil.feature.auth.request
 
-import com.aniable.yggdrasil.error.configureStatusPages
-import com.aniable.yggdrasil.feature.auth.authRoutes
-import io.ktor.server.application.*
-import io.ktor.server.routing.*
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-fun Application.configureRouting() {
-	configureStatusPages()
-
-	routing {
-		route("/api") {
-			v1Routes()
-		}
-	}
-}
-
-fun Route.v1Routes() {
-	route("/v1") {
-		authRoutes()
-	}
-}
+@Serializable
+data class RegisterRequest(
+	val email: String,
+	val username: String,
+	val password: String,
+	@SerialName("confirm_password") val confirmPassword: String,
+)

@@ -16,8 +16,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aniable.yggdrasil.error
+package com.aniable.yggdrasil.feature.auth.request
 
-import io.ktor.http.*
+import kotlinx.serialization.Serializable
 
-class ResponseStatusException(val status: HttpStatusCode, override val message: String? = null) : RuntimeException()
+@Serializable
+data class LoginRequest(
+	val email: String,
+	val password: String,
+)
