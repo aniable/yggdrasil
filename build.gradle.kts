@@ -39,6 +39,7 @@ dependencies {
 	implementation("io.ktor:ktor-serialization-kotlinx-json-jvm")
 	testImplementation("io.ktor:ktor-server-test-host-jvm")
 
+	implementation(libs.kotlinx.datetime)
 	implementation(libs.logback.classic)
 	implementation(libs.bundles.exposed)
 	implementation(libs.h2)
