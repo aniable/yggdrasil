@@ -43,5 +43,6 @@ dependencies {
 	implementation(libs.bundles.exposed)
 	implementation(libs.h2)
 	implementation(libs.bundles.koin)
+	implementation(libs.password4j)
 	testImplementation(libs.kotlin.test.junit)
 }
