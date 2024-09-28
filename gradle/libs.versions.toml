@@ -13,6 +13,7 @@ kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
 exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
+exposed-kotlin-datetime = { module = "org.jetbrains.exposed:exposed-kotlin-datetime", version.ref = "exposed" }
 h2 = { module = "com.h2database:h2", version.ref = "h2" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
@@ -21,7 +22,7 @@ koin-logger-slf4j = { module = "io.insert-koin:koin-logger-slf4j", version.ref =
 password4j = { module = "com.password4j:password4j", version.ref = "password4j" }
 
 [bundles]
-exposed = ["exposed-core", "exposed-jdbc"]
+exposed = ["exposed-core", "exposed-jdbc", "exposed-kotlin-datetime"]
 koin = ["koin-core", "koin-ktor", "koin-logger-slf4j"]
 
 [plugins]
