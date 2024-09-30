@@ -45,5 +45,8 @@ dependencies {
 	implementation(libs.h2)
 	implementation(libs.bundles.koin)
 	implementation(libs.password4j)
+	implementation(libs.jjwt.api)
+	runtimeOnly(libs.jjwt.impl)
+	runtimeOnly(libs.jjwt.jackson)
 	testImplementation(libs.kotlin.test.junit)
 }
