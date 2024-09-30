@@ -18,10 +18,15 @@
 
 package com.aniable.yggdrasil.plugin
 
+import com.aniable.yggdrasil.feature.user.UserDao
+import com.aniable.yggdrasil.feature.user.Users
+import com.password4j.Password
 import io.ktor.server.application.*
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Application.configureDatabases() {
 	val database = Database.connect(
@@ -31,7 +36,17 @@ fun Application.configureDatabases() {
 		password = environment.config.property("db.password").getString(),
 	)
 
-	suspend fun <T> query(block: suspend () -> T): T = newSuspendedTransaction(Dispatchers.IO) {
-		block()
+	transaction(database) {
+		SchemaUtils.create(Users)
+
+		UserDao.new {
+			email = "user@example.com"
+			username = "user"
+			password = Password.hash("changeme").addRandomSalt().withArgon2().result
+		}
 	}
+}
+
+suspend fun <T> query(block: suspend () -> T): T = newSuspendedTransaction(Dispatchers.IO) {
+	block()
 }
