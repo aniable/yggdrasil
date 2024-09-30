@@ -16,17 +16,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aniable.yggdrasil.plugin
+package com.aniable.yggdrasil.security
 
-import com.aniable.yggdrasil.security.securityModule
-import io.ktor.server.application.*
 import org.koin.dsl.module
-import org.koin.ktor.plugin.Koin
-import org.koin.logger.slf4jLogger
 
-fun Application.configureKoin() {
-	install(Koin) {
-		slf4jLogger()
-		modules(module { single { environment.config } }, securityModule)
-	}
-}
+val securityModule = module { single { JwtService(get()) } }

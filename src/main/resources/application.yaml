@@ -9,3 +9,8 @@ db:
   driver: "org.h2.Driver"
   user: "root"
   password: ""
+jwt:
+  # The secret key should be an HMAC-SHA digest. See: https://github.com/jwtk/jjwt?tab=readme-ov-file#hmac-sha
+  secret: "QKVuTfNAT5CC3GT9yda5gpwSRTsDTuqDiUUxYl31+aiq9eMNY5IqaES7GwE4nt6jhnl3EKLbEkLFzzItvNLifQ=="
+  # The expiration is how long the access token lasts. Can be a value such as: "15m", "1h", "1h 30m", "1d", etc.
+  expiration: "1d"
