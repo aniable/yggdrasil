@@ -20,6 +20,7 @@ package com.aniable.yggdrasil.feature.user
 
 import com.aniable.yggdrasil.serializer.UUIDSerializer
 import kotlinx.serialization.Serializable
+import org.jetbrains.exposed.sql.ResultRow
 import java.util.*
 
 @Serializable
@@ -30,5 +31,5 @@ data class User(
 	val password: String,
 ) {
 
-	constructor(userDao: UserDao) : this(userDao.id.value, userDao.email, userDao.username, userDao.password)
+	constructor(row: ResultRow) : this(row[Users.id].value, row[Users.email], row[Users.username], row[Users.password])
 }

@@ -18,7 +18,7 @@
 
 package com.aniable.yggdrasil.security
 
-import com.aniable.yggdrasil.feature.user.UserDao
+import com.aniable.yggdrasil.feature.user.Users
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.io.Decoders
@@ -26,6 +26,7 @@ import io.jsonwebtoken.security.Keys
 import io.ktor.server.config.*
 import kotlinx.datetime.Clock
 import kotlinx.datetime.toJavaInstant
+import org.jetbrains.exposed.sql.ResultRow
 import java.util.*
 import javax.crypto.SecretKey
 import kotlin.time.Duration
@@ -49,7 +50,7 @@ class JwtService(private val applicationConfig: ApplicationConfig) {
 		return extractClaim(token, Claims::getSubject)
 	}
 
-	fun build(userDao: UserDao): String {
+	fun build(row: ResultRow): String {
 		val now = Clock.System.now()
 		val nowDate = Date.from(now.toJavaInstant())
 
@@ -58,7 +59,7 @@ class JwtService(private val applicationConfig: ApplicationConfig) {
 		val expirationDate = Date.from(expiration.toJavaInstant())
 
 		return Jwts.builder()
-			.subject(userDao.id.value.toString())
+			.subject(row[Users.id].value.toString())
 			.issuedAt(nowDate)
 			.notBefore(nowDate)
 			.expiration(expirationDate)

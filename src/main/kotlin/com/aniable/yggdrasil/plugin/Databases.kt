@@ -18,13 +18,13 @@
 
 package com.aniable.yggdrasil.plugin
 
-import com.aniable.yggdrasil.feature.user.UserDao
 import com.aniable.yggdrasil.feature.user.Users
 import com.password4j.Password
 import io.ktor.server.application.*
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.insertIgnore
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -39,10 +39,10 @@ fun Application.configureDatabases() {
 	transaction(database) {
 		SchemaUtils.create(Users)
 
-		UserDao.new {
-			email = "user@example.com"
-			username = "user"
-			password = Password.hash("changeme").addRandomSalt().withArgon2().result
+		Users.insertIgnore {
+			it[email] = "user@example.com"
+			it[username] = "user"
+			it[password] = Password.hash("changeme").addRandomSalt().withArgon2().result
 		}
 	}
 }

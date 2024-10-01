@@ -18,13 +18,9 @@
 
 package com.aniable.yggdrasil.feature.user
 
-import org.jetbrains.exposed.dao.UUIDEntity
-import org.jetbrains.exposed.dao.UUIDEntityClass
-import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.kotlin.datetime.CurrentTimestamp
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
-import java.util.*
 
 object Users : UUIDTable() {
 
@@ -32,14 +28,4 @@ object Users : UUIDTable() {
 	val username = varchar("username", 20).uniqueIndex()
 	val password = varchar("password", 255)
 	val created = timestamp("created").defaultExpression(CurrentTimestamp)
-}
-
-class UserDao(id: EntityID<UUID>) : UUIDEntity(id) {
-
-	companion object : UUIDEntityClass<UserDao>(Users)
-
-	var email by Users.email
-	var username by Users.username
-	var password by Users.password
-	val created by Users.created
 }
