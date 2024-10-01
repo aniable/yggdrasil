@@ -19,6 +19,7 @@
 package com.aniable.yggdrasil.feature.user
 
 import com.aniable.yggdrasil.serializer.UUIDSerializer
+import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.ResultRow
 import java.util.*
@@ -29,7 +30,10 @@ data class User(
 	val email: String,
 	val username: String,
 	val password: String,
+	val created: Instant,
 ) {
 
-	constructor(row: ResultRow) : this(row[Users.id].value, row[Users.email], row[Users.username], row[Users.password])
+	constructor(row: ResultRow) : this(
+		row[Users.id].value, row[Users.email], row[Users.username], row[Users.password], row[Users.created]
+	)
 }
