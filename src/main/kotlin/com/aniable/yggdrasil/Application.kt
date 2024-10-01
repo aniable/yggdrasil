@@ -26,11 +26,11 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module() {
+	configureKoin()
 	configureSecurity()
 	configureHTTP()
 	configureMonitoring()
 	configureSerialization()
-	configureKoin()
 	configureDatabases()
 	configureRouting()
 }
