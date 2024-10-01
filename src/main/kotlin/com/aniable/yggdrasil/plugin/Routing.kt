@@ -20,6 +20,7 @@ package com.aniable.yggdrasil.plugin
 
 import com.aniable.yggdrasil.error.configureStatusPages
 import com.aniable.yggdrasil.feature.auth.authRoutes
+import com.aniable.yggdrasil.feature.user.userRoutes
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
 
@@ -36,5 +37,6 @@ fun Application.configureRouting() {
 fun Route.v1Routes() {
 	route("/v1") {
 		authRoutes()
+		userRoutes()
 	}
 }

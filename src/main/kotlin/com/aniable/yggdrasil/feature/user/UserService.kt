@@ -16,19 +16,17 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aniable.yggdrasil.plugin
+package com.aniable.yggdrasil.feature.user
 
-import com.aniable.yggdrasil.feature.auth.authModule
-import com.aniable.yggdrasil.feature.user.userModule
-import com.aniable.yggdrasil.security.securityModule
-import io.ktor.server.application.*
-import org.koin.dsl.module
-import org.koin.ktor.plugin.Koin
-import org.koin.logger.slf4jLogger
+import com.aniable.yggdrasil.plugin.query
+import io.ktor.server.auth.jwt.*
+import org.jetbrains.exposed.sql.selectAll
+import java.util.*
 
-fun Application.configureKoin() {
-	install(Koin) {
-		slf4jLogger()
-		modules(module { single { environment.config } }, securityModule, authModule, userModule)
+class UserService {
+
+	suspend fun getUserFromPrincipal(principal: JWTPrincipal?): User = query {
+		val subject = principal!!.subject.toString()
+		Users.selectAll().where { Users.id eq UUID.fromString(subject) }.map { User(it) }.first()
 	}
 }

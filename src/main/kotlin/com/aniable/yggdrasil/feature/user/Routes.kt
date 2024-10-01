@@ -16,19 +16,24 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aniable.yggdrasil.plugin
+package com.aniable.yggdrasil.feature.user
 
-import com.aniable.yggdrasil.feature.auth.authModule
-import com.aniable.yggdrasil.feature.user.userModule
-import com.aniable.yggdrasil.security.securityModule
 import io.ktor.server.application.*
-import org.koin.dsl.module
-import org.koin.ktor.plugin.Koin
-import org.koin.logger.slf4jLogger
+import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
+import org.koin.ktor.ext.inject
 
-fun Application.configureKoin() {
-	install(Koin) {
-		slf4jLogger()
-		modules(module { single { environment.config } }, securityModule, authModule, userModule)
+fun Route.userRoutes() {
+	val service by inject<UserService>()
+
+	route("/user") {
+		authenticate {
+			get("/me") {
+				val principal = call.principal<JWTPrincipal>()
+				call.respond(service.getUserFromPrincipal(principal))
+			}
+		}
 	}
 }
