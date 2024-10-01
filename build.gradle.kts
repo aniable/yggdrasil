@@ -42,7 +42,7 @@ dependencies {
 	implementation(libs.kotlinx.datetime)
 	implementation(libs.logback.classic)
 	implementation(libs.bundles.exposed)
-	implementation(libs.h2)
+	implementation(libs.postgresql)
 	implementation(libs.bundles.koin)
 	implementation(libs.password4j)
 	implementation(libs.jjwt.api)
