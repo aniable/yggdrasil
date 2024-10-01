@@ -23,8 +23,6 @@ import com.aniable.yggdrasil.feature.auth.request.LoginRequest
 import com.aniable.yggdrasil.feature.auth.request.RegisterRequest
 import com.aniable.yggdrasil.feature.user.User
 import com.aniable.yggdrasil.feature.user.Users
-import com.aniable.yggdrasil.feature.user.Users.email
-import com.aniable.yggdrasil.feature.user.Users.password
 import com.aniable.yggdrasil.plugin.query
 import com.aniable.yggdrasil.security.JwtService
 import com.password4j.Password
@@ -35,14 +33,25 @@ import org.jetbrains.exposed.sql.selectAll
 class AuthService(private val jwtService: JwtService) {
 
 	suspend fun register(request: RegisterRequest): User = query {
-		val hash = Password.hash(request.password).addRandomSalt().withArgon2().result ?: throw ResponseStatusException(
-			HttpStatusCode.InternalServerError, "Could not hash password"
-		)
+		val normalizedEmail = request.email.lowercase()
+		val normalizedUsername = request.username.lowercase()
+		val hashedPassword =
+			Password.hash(request.password).addRandomSalt().withArgon2().result ?: throw ResponseStatusException(
+				HttpStatusCode.InternalServerError, "Could not hash password"
+			)
+
+		if (Users.selectAll().where { Users.email eq normalizedEmail }.count() > 0) {
+			throw ResponseStatusException(HttpStatusCode.Conflict, "User with email already exists")
+		}
+
+		if (Users.selectAll().where { Users.username eq normalizedUsername }.count() > 0) {
+			throw ResponseStatusException(HttpStatusCode.Conflict, "User with username already exists")
+		}
 
 		val user = Users.insert {
-			it[email] = request.email.lowercase()
-			it[username] = request.username.lowercase()
-			it[password] = hash
+			it[email] = normalizedEmail
+			it[username] = normalizedUsername
+			it[password] = hashedPassword
 		}.resultedValues?.firstOrNull() ?: throw ResponseStatusException(
 			HttpStatusCode.InternalServerError, "Could not create new user"
 		)
@@ -51,12 +60,12 @@ class AuthService(private val jwtService: JwtService) {
 	}
 
 	suspend fun login(request: LoginRequest): Map<String, String> = query {
-		val foundUser = Users.selectAll().where { email eq request.email.lowercase() }.firstOrNull()
+		val foundUser = Users.selectAll().where { Users.email eq request.email.lowercase() }.firstOrNull()
 			?: throw ResponseStatusException(
 				HttpStatusCode.Unauthorized, "Bad credentials"
 			)
 
-		val matches = Password.check(request.password, foundUser[password]).withArgon2()
+		val matches = Password.check(request.password, foundUser[Users.password]).withArgon2()
 		if (!matches) throw ResponseStatusException(HttpStatusCode.Unauthorized, "Bad credentials")
 
 		val jwt = jwtService.build(foundUser)
