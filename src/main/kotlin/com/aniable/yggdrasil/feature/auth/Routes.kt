@@ -24,19 +24,23 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.koin.ktor.ext.inject
 
 fun Route.authRoutes() {
 	configureAuthValidation()
 
+	val service by inject<AuthService>()
+
 	route("/auth") {
 		post("/register") {
 			val request = call.receive<RegisterRequest>()
-			call.respond(request)
+			val response = service.register(request)
+			call.respond(response)
 		}
 
 		post("/login") {
 			val request = call.receive<LoginRequest>()
-			call.respond(request)
+			call.respond(service.login(request))
 		}
 	}
 }

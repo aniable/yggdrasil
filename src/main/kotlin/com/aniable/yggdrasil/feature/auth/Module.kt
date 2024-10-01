@@ -16,18 +16,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aniable.yggdrasil.plugin
+package com.aniable.yggdrasil.feature.auth
 
-import com.aniable.yggdrasil.feature.auth.authModule
-import com.aniable.yggdrasil.security.securityModule
-import io.ktor.server.application.*
 import org.koin.dsl.module
-import org.koin.ktor.plugin.Koin
-import org.koin.logger.slf4jLogger
 
-fun Application.configureKoin() {
-	install(Koin) {
-		slf4jLogger()
-		modules(module { single { environment.config } }, securityModule, authModule)
-	}
-}
+val authModule = module { single { AuthService(get()) } }
