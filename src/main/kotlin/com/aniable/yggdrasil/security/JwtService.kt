@@ -19,51 +19,37 @@
 package com.aniable.yggdrasil.security
 
 import com.aniable.yggdrasil.feature.user.Users
-import io.jsonwebtoken.Claims
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.io.Decoders
-import io.jsonwebtoken.security.Keys
+import com.auth0.jwt.JWT
+import com.auth0.jwt.JWTVerifier
+import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.server.config.*
 import kotlinx.datetime.Clock
 import kotlinx.datetime.toJavaInstant
 import org.jetbrains.exposed.sql.ResultRow
-import java.util.*
-import javax.crypto.SecretKey
 import kotlin.time.Duration
 
 class JwtService(private val applicationConfig: ApplicationConfig) {
 
-	private fun getSecretKey(): SecretKey? {
-		return Keys.hmacShaKeyFor(Decoders.BASE64.decode(applicationConfig.property("jwt.secret").getString()))
-	}
-
-	private fun extractAllClaims(token: String): Claims {
-		return Jwts.parser().verifyWith(getSecretKey()).build().parseSignedClaims(token).payload
-	}
-
-	private fun <T> extractClaim(token: String, resolver: (Claims) -> T): T {
-		val claims = extractAllClaims(token)
-		return resolver(claims)
-	}
-
-	fun extractSubject(token: String): String {
-		return extractClaim(token, Claims::getSubject)
+	private fun getSecretKey(): Algorithm? {
+		return Algorithm.HMAC512(applicationConfig.property("jwt.secret").getString())
 	}
 
 	fun build(row: ResultRow): String {
 		val now = Clock.System.now()
-		val nowDate = Date.from(now.toJavaInstant())
 
 		val expirationDuration = applicationConfig.property("jwt.expiration").getString()
 		val expiration = now.plus(Duration.parse(expirationDuration))
-		val expirationDate = Date.from(expiration.toJavaInstant())
 
-		return Jwts.builder()
-			.subject(row[Users.id].value.toString())
-			.issuedAt(nowDate)
-			.notBefore(nowDate)
-			.expiration(expirationDate)
-			.signWith(getSecretKey())
-			.compact()
+		return JWT.create()
+			.withSubject(row[Users.id].value.toString())
+			.withIssuedAt(now.toJavaInstant())
+			.withNotBefore(now.toJavaInstant())
+			.withExpiresAt(expiration.toJavaInstant())
+			.sign(getSecretKey())
+			.toString()
+	}
+
+	fun verifier(): JWTVerifier {
+		return JWT.require(getSecretKey()).build()
 	}
 }
