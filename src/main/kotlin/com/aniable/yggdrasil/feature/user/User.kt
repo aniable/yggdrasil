@@ -29,11 +29,8 @@ data class User(
 	@Serializable(with = UUIDSerializer::class) val id: UUID,
 	val email: String,
 	val username: String,
-	val password: String,
 	val created: Instant,
 ) {
 
-	constructor(row: ResultRow) : this(
-		row[Users.id].value, row[Users.email], row[Users.username], row[Users.password], row[Users.created]
-	)
+	constructor(row: ResultRow) : this(row[Users.id].value, row[Users.email], row[Users.username], row[Users.created])
 }
