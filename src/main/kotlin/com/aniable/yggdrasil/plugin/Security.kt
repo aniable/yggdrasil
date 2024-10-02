@@ -19,25 +19,32 @@
 package com.aniable.yggdrasil.plugin
 
 import com.aniable.yggdrasil.error.ResponseStatusException
+import com.aniable.yggdrasil.feature.user.UserService
+import com.aniable.yggdrasil.security.AuthenticatedUserPrincipal
 import com.aniable.yggdrasil.security.JwtService
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import org.koin.ktor.ext.inject
+import java.util.*
 
 fun Application.configureSecurity() {
 	val jwtService by inject<JwtService>()
+	val userService by inject<UserService>()
 
 	install(Authentication) {
 		jwt {
 			verifier(jwtService.verifier())
 			validate { jwtCredential ->
 				val payload = jwtCredential.payload
-				if (payload.subject.isNullOrBlank()) {
+				val id = UUID.fromString(payload.subject) ?: null
+				val user = id?.let { userService.getUserById(it) }
+
+				if (user == null) {
 					null
 				} else {
-					JWTPrincipal(payload)
+					AuthenticatedUserPrincipal(user)
 				}
 			}
 			challenge { _, _ ->

@@ -16,16 +16,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aniable.yggdrasil.feature.user
+package com.aniable.yggdrasil.security
 
-import com.aniable.yggdrasil.plugin.query
+import com.aniable.yggdrasil.feature.user.AuthenticatedUser
+import io.ktor.server.auth.*
 import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.selectAll
-import java.util.*
 
-class UserService {
+data class AuthenticatedUserPrincipal(val user: AuthenticatedUser) : Principal {
 
-	suspend fun getUserById(id: UUID): ResultRow? = query {
-		Users.selectAll().where { Users.id eq id }.firstOrNull()
-	}
+	constructor(row: ResultRow) : this(AuthenticatedUser(row))
 }

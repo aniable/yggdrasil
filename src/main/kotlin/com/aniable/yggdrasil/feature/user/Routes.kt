@@ -18,21 +18,18 @@
 
 package com.aniable.yggdrasil.feature.user
 
+import com.aniable.yggdrasil.security.AuthenticatedUserPrincipal
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
-import io.ktor.server.auth.jwt.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import org.koin.ktor.ext.inject
 
 fun Route.userRoutes() {
-	val service by inject<UserService>()
-
 	route("/user") {
 		authenticate {
 			get("/me") {
-				val principal = call.principal<JWTPrincipal>()
-				call.respond(service.getUserFromPrincipal(principal))
+				val principal = call.principal<AuthenticatedUserPrincipal>()
+				call.respond(principal!!.user)
 			}
 		}
 	}

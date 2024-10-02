@@ -18,14 +18,19 @@
 
 package com.aniable.yggdrasil.feature.user
 
-import com.aniable.yggdrasil.plugin.query
+import com.aniable.yggdrasil.serializer.UUIDSerializer
+import kotlinx.datetime.Instant
+import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.selectAll
 import java.util.*
 
-class UserService {
+@Serializable
+data class AuthenticatedUser(
+	@Serializable(with = UUIDSerializer::class) val id: UUID,
+	val email: String,
+	val username: String,
+	val created: Instant,
+) {
 
-	suspend fun getUserById(id: UUID): ResultRow? = query {
-		Users.selectAll().where { Users.id eq id }.firstOrNull()
-	}
+	constructor(row: ResultRow) : this(row[Users.id].value, row[Users.email], row[Users.username], row[Users.created])
 }
