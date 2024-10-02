@@ -24,6 +24,12 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.ResultRow
 import java.util.*
 
+/**
+ * This is a private-facing User response object.
+ * Private data, such as emails, may be returned in this object.
+ *
+ * For a public-facing User response object see [User].
+ */
 @Serializable
 data class AuthenticatedUser(
 	@Serializable(with = UUIDSerializer::class) val id: UUID,

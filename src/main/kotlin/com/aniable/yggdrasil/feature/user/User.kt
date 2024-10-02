@@ -24,13 +24,18 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.ResultRow
 import java.util.*
 
+/**
+ * This is a public-facing User response object.
+ * We should not include any sensitive information in this object that our users may want private (such as emails).
+ *
+ * For a private-facing User response object see [AuthenticatedUser].
+ */
 @Serializable
 data class User(
 	@Serializable(with = UUIDSerializer::class) val id: UUID,
-	val email: String,
 	val username: String,
 	val created: Instant,
 ) {
 
-	constructor(row: ResultRow) : this(row[Users.id].value, row[Users.email], row[Users.username], row[Users.created])
+	constructor(row: ResultRow) : this(row[Users.id].value, row[Users.username], row[Users.created])
 }

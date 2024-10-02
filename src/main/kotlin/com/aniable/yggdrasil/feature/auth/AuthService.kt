@@ -21,7 +21,7 @@ package com.aniable.yggdrasil.feature.auth
 import com.aniable.yggdrasil.error.ResponseStatusException
 import com.aniable.yggdrasil.feature.auth.request.LoginRequest
 import com.aniable.yggdrasil.feature.auth.request.RegisterRequest
-import com.aniable.yggdrasil.feature.user.User
+import com.aniable.yggdrasil.feature.user.AuthenticatedUser
 import com.aniable.yggdrasil.feature.user.Users
 import com.aniable.yggdrasil.plugin.query
 import com.aniable.yggdrasil.security.JwtService
@@ -32,7 +32,7 @@ import org.jetbrains.exposed.sql.selectAll
 
 class AuthService(private val jwtService: JwtService) {
 
-	suspend fun register(request: RegisterRequest): User = query {
+	suspend fun register(request: RegisterRequest): AuthenticatedUser = query {
 		val normalizedEmail = request.email.lowercase()
 		val normalizedUsername = request.username.lowercase()
 		val hashedPassword =
@@ -56,7 +56,7 @@ class AuthService(private val jwtService: JwtService) {
 			HttpStatusCode.InternalServerError, "Could not create new user"
 		)
 
-		User(user)
+		AuthenticatedUser(user)
 	}
 
 	suspend fun login(request: LoginRequest): Map<String, String> = query {
